@@ -89,76 +89,47 @@
               <input type="file" id="upload-pic" class="hidden" accept="image/*">
             </section>
 
-            <!-- My Tours Section -->
             <section id="my-tours-section" class="content-section">
               <h2>My Tours</h2>
-
+            
               <!-- Toggle Buttons for Categories -->
               <div class="tour-toggle-buttons">
-                <button class="toggle-btn active" data-status="all">All (3)</button>
-                <button class="toggle-btn" data-status="upcoming">Upcoming (1)</button>
-                <button class="toggle-btn" data-status="completed">Completed (1)</button>
-                <button class="toggle-btn" data-status="cancelled">Cancelled (1)</button>
+                <button class="toggle-btn active" data-status="all">All</button>
+                <button class="toggle-btn" data-status="upcoming">Upcoming</button>
+                <button class="toggle-btn" data-status="completed">Completed</button>
+                <button class="toggle-btn" data-status="cancelled">Cancelled</button>
               </div>
-                  
+            
               <!-- Tours Container -->
               <div class="tours-container">
-                <!-- Tour Card Example -->
-                <div class="tour-card" data-status="upcoming">
-                  <div class="tour-header">
-                    <h3 class="tour-title">Island Hopping Tour</h3>
-                    <span class="tour-status upcoming">Upcoming</span>
+                {% for booking in bookings %}
+                  <div class="tour-card" data-status="{{ booking.status }}">
+                    <div class="tour-header">
+                      <h3 class="tour-title">{{ booking.tour_package.name }}</h3>
+                      <span class="tour-status {{ booking.status }}">{{ booking.status }}</span>
+                    </div>
+                    <p class="tour-date">{{ booking.date.strftime('%B %d, %Y') }}</p>
+                    <div class="tour-header">
+                      <p class="tour-guide">With: <span class="guide-name">{{ booking.tour_guide.user.first_name }} {{ booking.tour_guide.user.last_name }}</span></p>
+                      <span class="view-booking" onclick="openBookingDetails('{{ booking.id }}')">View Booking &rarr;</span>
+                    </div>
                   </div>
-                  <p class="tour-date">October 20, 2024</p>
-                  <div class="tour-header">
-                    <p class="tour-guide">With: <span class="guide-name">Vincenzo Cassano</span></p>
-                    <span class="view-booking" onclick="openBookingDetails('Booking #123')">View Booking &rarr;</span>
-                  </div>
-                </div>
-                  
-                <div class="tour-card" data-status="completed">
-                  <div class="tour-header">
-                    <h3 class="tour-title">Mountain Trekking</h3>
-                    <span class="tour-status completed">Completed</span>
-                  </div>
-                  <p class="tour-date">October 5, 2024</p>
-                  <div class="tour-header">
-                    <p class="tour-guide">With: <span class="guide-name">Mark Lee</span></p>
-                    <span class="view-booking" onclick="openBookingDetails('Booking #124')">View Booking &rarr;</span>
-                  </div>
-                </div>
-                
-                <div class="tour-card" data-status="cancelled">
-                  <div class="tour-header">
-                    <h3 class="tour-title">City Exploration</h3>
-                    <span class="tour-status cancelled">Cancelled</span>
-                  </div>
-                  <p class="tour-date">September 15, 2024</p>
-                  <div class="tour-header">
-                    <p class="tour-guide">With: <span class="guide-name">Amy Cooper</span></p>
-                    <span class="view-booking" onclick="openBookingDetails('Booking #125')">View Booking &rarr;</span>
-                  </div>
-                </div>
-              </div>
-                  
-              <!-- Booking Details Modal -->
-              <div id="booking-modal" class="modal hidden">
-                <div class="modal-content">
-                  <h3>Booking Details</h3>
-                  <p id="booking-info">Here will be the booking details...</p>
-                  <button class="primary-btn" id="close-booking-modal">Close</button>
-                </div>
+                {% else %}
+                  <p>No bookings available.</p>
+                {% endfor %}
               </div>
             </section>
+            
+            
                   
             <!-- My Reviews Section -->
             <section id="my-reviews-section" class="content-section">
               <h2>My Reviews 
                 <span id="toggle-reviews" class="toggle-icon">&#128065;</span> <!-- Eye Icon -->
               </h2>
-
-              <!-- To Review Card -->
-              <div class= "to-review-card">
+              
+              <!-- Review Button -->
+              <div class="to-review-card">
                 <img src="Image/tourguide.jpg" alt="Tour Guide" class="guide-photo" />
                 <div class="review-info">
                   <h3>Island Hopping Tour</h3>
@@ -168,9 +139,8 @@
               </div>
 
               <!-- Reviews Grid -->
-              <div id="reviews-container" class="traveler-reviews-grid hidden">
-                
-                <!-- Review Card -->
+              <div id="reviews-container" class="traveler-reviews-grid">
+                <!-- Sample Review Card -->
                 <div class="review-card">
                   <img src="Image/travelerr.JPG" alt="Tour Picture" class="tour-image" />
                   <div class="review-content">
@@ -182,35 +152,7 @@
                         <div class="ratings">4.2 ★★★★☆</div>
                       </div>
                     </div>
-
-                    <p class="review-text">
-                      Had an amazing experience! The guide was knowledgeable and friendly.
-                    </p>
-
-                    <div class="review-footer">
-                      <p class="review-date">Oct. 10, 2024</p>
-                      <p class="toured-by">Toured by: <span class="tour-guide-name">Tour Guide 1</span></p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Review Card -->
-                <div class="review-card">
-                  <img src="Image/travelerr.JPG" alt="Tour Picture" class="tour-image" />
-                  <div class="review-content">
-                    <div class="traveler-info">
-                      <img src="Image/traveler.JPG" alt="Traveler Picture" class="traveler-pic" />
-                      <div class="traveler-details">
-                        <h3>Hyunwoo</h3>
-                        <p class="tour-name">Island Tour</p>
-                        <div class="ratings">4.2 ★★★★☆</div>
-                      </div>
-                    </div>
-
-                    <p class="review-text">
-                      Had an amazing experience! The guide was knowledgeable and friendly.
-                    </p>
-
+                    <p class="review-text">Had an amazing experience! The guide was knowledgeable and friendly.</p>
                     <div class="review-footer">
                       <p class="review-date">Oct. 10, 2024</p>
                       <p class="toured-by">Toured by: <span class="tour-guide-name">Tour Guide 1</span></p>
@@ -222,34 +164,47 @@
               <!-- Review Modal -->
               <div id="review-modal" class="modal hidden">
                 <div class="modal-content">
-                  <h2>How was your tour?</h2>
-                  <!-- Star Rating -->
-                  <div class="star-rating" id="star-rating">
-                    <span class="star" data-value="1">&#9733;</span>
-                    <span class="star" data-value="2">&#9733;</span>
-                    <span class="star" data-value="3">&#9733;</span>
-                    <span class="star" data-value="4">&#9733;</span>
-                    <span class="star" data-value="5">&#9733;</span>
-                  </div>
-
-                  <h3>Leave a Review</h3>
-                  <form id="review-form">
-                    <div class="input-container">
-                      <textarea id="review-text" rows="5" placeholder="Write your review here..." required></textarea>
+                    <h2>How was your tour?</h2>
+                    
+                    <!-- Star Rating -->
+                    <div class="star-rating" id="star-rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
                     </div>
 
-                    <div class="input-container">
-                      <label for="review-image">Upload Photo</label>
-                      <input type="file" id="review-image" accept="image/*" />
-                    </div>
+                    <h3>Leave a Review</h3>
+                    <form id="review-form" enctype="multipart/form-data">
+                        <div class="input-container">
+                            <textarea id="review-text" rows="5" placeholder="Write your review here..." required></textarea>
+                        </div>
+<!-- 
+                        <div class="input-container">
+                            <label for="review-image">Upload Photo</label>
+                            <input type="file" id="review-image" accept="image/*" />
+                        </div> -->
+                        <div class="input-container">
+                          <label for="review-image">Upload Photo</label>
+                          <input type="file" id="review-image" name="review_image" accept="image/*" />
+                      </div>
 
-                  </form>
-                  <div class="modal-button-container">
-                    <button type="button" class="cancel-btn" id="close-review-modal">Cancel</button>
-                    <button type="submit" class="confirm-btn">Submit</button>
-                  </div>
+                        
+
+                        <div class="modal-button-container">
+                          <button type="button" class="cancel-btn" id="close-review-modal">Cancel</button>
+                          <button type="submit" class="confirm-btn" id="submit-review-btn">Submit</button>
+                      </div>
+                      
+                        </div>
+                    </form>
                 </div>
-              </div>
+              
+
+              <!-- Modal Overlay -->
+              <div id="modal-overlay" class="modal-overlay hidden"></div>
+
             </section>
 
             <!-- Account Section -->
@@ -332,7 +287,7 @@
                   <button class="cancel-btn" id="cancel-logout">Cancel</button>
                   <a href="{{ url_for('main.logout') }}">
                     <button class="logout-btn" id="confirm-logout">Log Out</button>
-                  <a/>
+                  </a>
                 </div>
               </div>
             </div>
@@ -342,6 +297,7 @@
           <div id="modal-overlay" class="modal-overlay hidden"></div>
 
         </div>
+
 
         <script src="{{ url_for('static', filename='TravelerProfile.js') }}"defer></script>
       </body>

@@ -672,7 +672,467 @@ closeBookingModal.addEventListener('click', () => {
 
 
 
-//CALENDAR
+// //CALENDAR
+// document.addEventListener('DOMContentLoaded', function () {
+//   const calendarEl = document.getElementById('availability-calendar');
+//   const editAvailabilityBtn = document.getElementById('edit-availability');
+//   const markAvailableBtn = document.getElementById('mark-available');
+//   const markUnavailableBtn = document.getElementById('mark-unavailable');
+//   const resetCalendarBtn = document.getElementById('reset-calendar');
+//   const saveAvailabilityBtn = document.getElementById('save-availability');
+
+//   let isEditing = false;
+//   let selectedDate = null;
+
+//   // Initialize FullCalendar for tour guide's availability management
+//   const calendar = new FullCalendar.Calendar(calendarEl, {
+//     initialView: 'dayGridMonth',
+//     selectable: true,
+//     selectOverlap: false,
+//     headerToolbar: {
+//       left: 'prev,next today',
+//       center: 'title',
+//       right: 'dayGridMonth,timeGridWeek,timeGridDay',
+//     },
+//     events: [],
+//     select: function (info) {
+//       if (isEditing) {
+//         const existingEvent = findEventByDate(info.startStr);
+//         if (!existingEvent) selectedDate = info.startStr;
+//         else alert('This date already has a status.');
+//         calendar.unselect();
+//       } else {
+//         alert('Enable edit mode to mark availability.');
+//       }
+//     },
+//     eventClick: function (info) {
+//       if (isEditing && info.event.extendedProps.status !== 'booked') {
+//         info.event.remove();
+//       } else if (info.event.extendedProps.status === 'booked') {
+//         alert('This date is booked and cannot be changed.');
+//       }
+//     },
+//   });
+
+//   calendar.render();
+
+//   // Load availability and set FullCalendar
+//   async function loadAvailability() {
+//     const tourGuideId = currentUserId; // Use the actual tour guide's ID
+//  // Update this as necessary to dynamically retrieve the ID
+//     try {
+//         console.log(`Fetching availability data from URL: /tourguide/get_availability/${tourGuideId}`);
+        
+//         const response = await fetch(`/tourguide/get_availability/${tourGuideId}`);
+        
+//         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+//         const availability = await response.json();
+//         console.log("Fetched availability data:", availability);
+
+//         if (!calendar) {
+//             throw new Error("Calendar instance is not defined.");
+//         }
+
+//         // Clear current events to avoid duplication
+//         calendar.getEvents().forEach(event => event.remove());
+
+//         // Populate FullCalendar with fetched availability data
+//         availability.forEach(entry => {
+//             const color = entry.status === 'available' ? '#4ecdc4' : '#e63946';
+//             const title = entry.status === 'available' ? 'Available' : 'Unavailable';
+//             calendar.addEvent({
+//                 title: title,
+//                 start: entry.date,
+//                 allDay: true,
+//                 backgroundColor: color,
+//                 textColor: 'white',
+//                 extendedProps: { status: entry.status },
+//             });
+//         });
+//     } catch (error) {
+//         console.error("Error loading availability:", error);
+//     }
+//   }
+
+//   loadAvailability(); // Call to load availability on page load
+
+//   // Helper function to find if an event exists by date
+//   function findEventByDate(date) {
+//     return calendar.getEvents().find(event => event.startStr === date);
+//   }
+
+//   // Toggle edit mode and show/hide controls
+//   editAvailabilityBtn.addEventListener('click', () => {
+//     isEditing = !isEditing;
+//     toggleEditButtons(isEditing);
+//   });
+
+//   function toggleEditButtons(isEditing) {
+//     markAvailableBtn.classList.toggle('hidden', !isEditing);
+//     markUnavailableBtn.classList.toggle('hidden', !isEditing);
+//     resetCalendarBtn.classList.toggle('hidden', !isEditing);
+//     saveAvailabilityBtn.classList.toggle('hidden', !isEditing);
+//     editAvailabilityBtn.textContent = isEditing ? 'Exit Edit Mode' : 'Edit Availability';
+//   }
+
+//   // Mark selected date as available
+//   markAvailableBtn.addEventListener('click', () => {
+//     if (selectedDate) {
+//       addEvent('Available', selectedDate, '#4ecdc4', 'available');
+//       selectedDate = null;
+//     }
+//   });
+
+//   // Mark selected date as unavailable
+//   markUnavailableBtn.addEventListener('click', () => {
+//     if (selectedDate) {
+//       addEvent('Unavailable', selectedDate, '#e63946', 'unavailable');
+//       selectedDate = null;
+//     }
+//   });
+
+//   // Add event to the calendar with title, color, and status
+//   function addEvent(title, date, color, status) {
+//     if (!findEventByDate(date)) {
+//       calendar.addEvent({
+//         title: title,
+//         start: date,
+//         allDay: true,
+//         backgroundColor: color,
+//         textColor: 'white',
+//         extendedProps: { status: status },
+//       });
+//     } else {
+//       alert('This date already has a status.');
+//     }
+//   }
+
+//   // Reset calendar events, excluding booked ones
+//   resetCalendarBtn.addEventListener('click', () => {
+//     calendar.getEvents().forEach(event => {
+//       if (event.extendedProps.status !== 'booked') event.remove();
+//     });
+//   });
+
+//   // Save availability data to backend
+//   saveAvailabilityBtn.addEventListener('click', async () => {
+//     const savedAvailability = calendar.getEvents().map(event => ({
+//       title: event.title,
+//       start: event.startStr,
+//       status: event.extendedProps.status,
+//     }));
+
+//     console.log("Saving availability data:", savedAvailability);
+
+//     try {
+//       const response = await fetch('/tourguide/set_availability', {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify(savedAvailability),
+//       });
+
+//       if (response.ok) {
+//         alert('Availability saved successfully!');
+//         loadAvailability(); // Reload availability after saving to refresh the calendar
+//       } else {
+//         alert('Failed to save availability.');
+//       }
+//     } catch (error) {
+//       console.error('Error saving availability:', error);
+//     }
+//   });
+// });
+
+
+// document.addEventListener('DOMContentLoaded', function () {
+//   const calendarEl = document.getElementById('availability-calendar');
+//   const editAvailabilityBtn = document.getElementById('edit-availability');
+//   const markAvailableBtn = document.getElementById('mark-available');
+//   const markUnavailableBtn = document.getElementById('mark-unavailable');
+//   const resetCalendarBtn = document.getElementById('reset-calendar');
+//   const saveAvailabilityBtn = document.getElementById('save-availability');
+
+//   let isEditing = false;
+
+//   // Initialize FullCalendar
+//   const calendar = new FullCalendar.Calendar(calendarEl, {
+//     initialView: 'dayGridMonth',
+//     selectable: true,
+//     selectOverlap: false,
+//     headerToolbar: {
+//       left: 'prev,next today',
+//       center: 'title',
+//       right: 'dayGridMonth,timeGridWeek,timeGridDay',
+//     },
+//     events: [], // Fetched dynamically
+//     select: function (info) {
+//       if (isEditing) {
+//         toggleEventStatus(info.startStr);
+//       } else {
+//         alert('Enable edit mode to mark availability.');
+//       }
+//       calendar.unselect();
+//     },
+//     eventClick: function (info) {
+//       if (isEditing && info.event.extendedProps.status !== 'booked') {
+//         info.event.remove();
+//       } else if (info.event.extendedProps.status === 'booked') {
+//         alert('This date is booked and cannot be changed.');
+//       }
+//     },
+//   });
+
+//   calendar.render();
+
+//   // Helper: Toggle between available/unavailable
+//   function toggleEventStatus(date) {
+//     const event = calendar.getEvents().find(event => event.startStr === date);
+//     if (event) {
+//       event.remove();
+//     } else {
+//       calendar.addEvent({
+//         title: 'Available',
+//         start: date,
+//         allDay: true,
+//         backgroundColor: '#4ecdc4',
+//         textColor: 'white',
+//         extendedProps: { status: 'available' },
+//       });
+//     }
+//   }
+
+//   // Load availability from the server
+//   async function loadAvailability() {
+//     try {
+//       const response = await fetch('/tourguide/get_availability');
+//       if (!response.ok) throw new Error('Failed to load availability.');
+//       const data = await response.json();
+//       calendar.getEvents().forEach(event => event.remove());
+//       data.forEach(entry => {
+//         calendar.addEvent({
+//           title: entry.status === 'available' ? 'Available' : 'Unavailable',
+//           start: entry.date,
+//           allDay: true,
+//           backgroundColor: entry.status === 'available' ? '#4ecdc4' : '#e63946',
+//           textColor: 'white',
+//           extendedProps: { status: entry.status },
+//         });
+//       });
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   }
+
+//   // Save availability to the server
+//   async function saveAvailability() {
+//     try {
+//       const events = calendar.getEvents().map(event => ({
+//         date: event.startStr,
+//         status: event.extendedProps.status,
+//       }));
+//       const response = await fetch('/tourguide/set_availability', {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify(events),
+//       });
+//       if (!response.ok) throw new Error('Failed to save availability.');
+//       alert('Availability saved successfully.');
+//       loadAvailability();
+//     } catch (error) {
+//       console.error(error);
+//       alert('Failed to save availability.');
+//     }
+//   }
+
+//   // Attach event listeners
+//   editAvailabilityBtn.addEventListener('click', () => {
+//     isEditing = !isEditing;
+//     [markAvailableBtn, markUnavailableBtn, resetCalendarBtn, saveAvailabilityBtn].forEach(button =>
+//       button.classList.toggle('hidden', !isEditing)
+//     );
+//     editAvailabilityBtn.textContent = isEditing ? 'Exit Edit Mode' : 'Edit Availability';
+//   });
+
+//   markAvailableBtn.addEventListener('click', () => {
+//     const selectedDate = prompt('Enter a date to mark as available (YYYY-MM-DD):');
+//     if (selectedDate) toggleEventStatus(selectedDate);
+//   });
+
+//   markUnavailableBtn.addEventListener('click', () => {
+//     const selectedDate = prompt('Enter a date to mark as unavailable (YYYY-MM-DD):');
+//     if (selectedDate) toggleEventStatus(selectedDate);
+//   });
+
+//   resetCalendarBtn.addEventListener('click', () => {
+//     calendar.getEvents().forEach(event => {
+//       if (event.extendedProps.status !== 'booked') event.remove();
+//     });
+//   });
+
+//   saveAvailabilityBtn.addEventListener('click', saveAvailability);
+
+//   // Initial load
+//   loadAvailability();
+// });
+
+
+
+
+
+
+// document.addEventListener('DOMContentLoaded', function () {
+//   const calendarEl = document.getElementById('availability-calendar');
+//   const editAvailabilityBtn = document.getElementById('edit-availability');
+//   const markAvailableBtn = document.getElementById('mark-available');
+//   const markUnavailableBtn = document.getElementById('mark-unavailable');
+//   const resetCalendarBtn = document.getElementById('reset-calendar');
+//   const saveAvailabilityBtn = document.getElementById('save-availability');
+
+//   let isEditing = false;
+//   let activeStatus = null; // "available" or "unavailable"
+
+//   // Initialize FullCalendar
+//   const calendar = new FullCalendar.Calendar(calendarEl, {
+//     initialView: 'dayGridMonth',
+//     selectable: true,
+//     selectOverlap: false,
+//     headerToolbar: {
+//       left: 'prev,next today',
+//       center: 'title',
+//       right: 'dayGridMonth,timeGridWeek,timeGridDay',
+//     },
+//     events: [], // Fetched dynamically
+//     select: function (info) {
+//       if (isEditing) {
+//         if (activeStatus) {
+//           toggleEventStatus(info.startStr, activeStatus);
+//         } else {
+//           alert('Please select "Mark Available" or "Mark Unavailable" first.');
+//         }
+//       } else {
+//         alert('Enable edit mode to mark availability.');
+//       }
+//       calendar.unselect();
+//     },
+//     eventClick: function (info) {
+//       if (isEditing && info.event.extendedProps.status !== 'booked') {
+//         info.event.remove();
+//       } else if (info.event.extendedProps.status === 'booked') {
+//         alert('This date is booked and cannot be changed.');
+//       }
+//     },
+//   });
+
+//   calendar.render();
+
+//   // Helper: Toggle between available/unavailable
+//   function toggleEventStatus(date, status) {
+//     const event = calendar.getEvents().find(event => event.startStr === date);
+//     if (event) {
+//       if (event.extendedProps.status !== 'booked') {
+//         event.remove();
+//       }
+//     } else {
+//       const title = status === 'available' ? 'Available' : 'Unavailable';
+//       const color = status === 'available' ? '#4ecdc4' : '#e63946';
+//       calendar.addEvent({
+//         title: title,
+//         start: date,
+//         allDay: true,
+//         backgroundColor: color,
+//         textColor: 'white',
+//         extendedProps: { status: status },
+//       });
+//     }
+//   }
+
+//   // Load availability from the server
+//   async function loadAvailability() {
+//     try {
+//       const response = await fetch('/tourguide/get_availability');
+//       if (!response.ok) throw new Error('Failed to load availability.');
+//       const data = await response.json();
+//       calendar.getEvents().forEach(event => event.remove());
+//       data.forEach(entry => {
+//         calendar.addEvent({
+//           title: entry.status === 'available' ? 'Available' : 'Unavailable',
+//           start: entry.date,
+//           allDay: true,
+//           backgroundColor: entry.status === 'available' ? '#4ecdc4' : '#e63946',
+//           textColor: 'white',
+//           extendedProps: { status: entry.status },
+//         });
+//       });
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   }
+
+//   // Save availability to the server
+//   async function saveAvailability() {
+//     try {
+//       const events = calendar.getEvents().map(event => ({
+//         date: event.startStr,
+//         status: event.extendedProps.status,
+//       }));
+//       const response = await fetch('/tourguide/set_availability', {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify(events),
+//       });
+//       if (!response.ok) throw new Error('Failed to save availability.');
+//       alert('Availability saved successfully.');
+//       loadAvailability();
+//     } catch (error) {
+//       console.error(error);
+//       alert('Failed to save availability.');
+//     }
+//   }
+
+//   // Attach event listeners
+//   editAvailabilityBtn.addEventListener('click', () => {
+//     isEditing = !isEditing;
+//     toggleEditButtons(isEditing);
+//   });
+
+//   function toggleEditButtons(isEditing) {
+//     markAvailableBtn.classList.toggle('hidden', !isEditing);
+//     markUnavailableBtn.classList.toggle('hidden', !isEditing);
+//     resetCalendarBtn.classList.toggle('hidden', !isEditing);
+//     saveAvailabilityBtn.classList.toggle('hidden', !isEditing);
+//     editAvailabilityBtn.textContent = isEditing ? 'Exit Edit Mode' : 'Edit Availability';
+//     activeStatus = null; // Reset active status when exiting edit mode
+//   }
+
+//   // Set active status to "available"
+//   markAvailableBtn.addEventListener('click', () => {
+//     activeStatus = 'available';
+//     alert('Click on dates to mark them as available.');
+//   });
+
+//   // Set active status to "unavailable"
+//   markUnavailableBtn.addEventListener('click', () => {
+//     activeStatus = 'unavailable';
+//     alert('Click on dates to mark them as unavailable.');
+//   });
+
+//   // Reset calendar events, excluding booked ones
+//   resetCalendarBtn.addEventListener('click', () => {
+//     calendar.getEvents().forEach(event => {
+//       if (event.extendedProps.status !== 'booked') event.remove();
+//     });
+//   });
+
+//   saveAvailabilityBtn.addEventListener('click', saveAvailability);
+
+//   // Initial load
+//   loadAvailability();
+// });
+
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
   const calendarEl = document.getElementById('availability-calendar');
   const editAvailabilityBtn = document.getElementById('edit-availability');
@@ -682,9 +1142,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const saveAvailabilityBtn = document.getElementById('save-availability');
 
   let isEditing = false;
-  let selectedDate = null;
+  let activeStatus = null; // "available" or "unavailable"
 
-  // Initialize FullCalendar for tour guide's availability management
+  // Initialize FullCalendar
   const calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'dayGridMonth',
     selectable: true,
@@ -694,16 +1154,18 @@ document.addEventListener('DOMContentLoaded', function () {
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay',
     },
-    events: [],
+    events: [], // Fetched dynamically
     select: function (info) {
       if (isEditing) {
-        const existingEvent = findEventByDate(info.startStr);
-        if (!existingEvent) selectedDate = info.startStr;
-        else alert('This date already has a status.');
-        calendar.unselect();
+        if (activeStatus) {
+          toggleEventStatus(info.startStr, activeStatus);
+        } else {
+          alert('Please select "Mark Available" or "Mark Unavailable" first.');
+        }
       } else {
         alert('Enable edit mode to mark availability.');
       }
+      calendar.unselect();
     },
     eventClick: function (info) {
       if (isEditing && info.event.extendedProps.status !== 'booked') {
@@ -716,53 +1178,85 @@ document.addEventListener('DOMContentLoaded', function () {
 
   calendar.render();
 
-  // Load availability and set FullCalendar
-  async function loadAvailability() {
-    const tourGuideId = currentUserId; // Use the actual tour guide's ID
- // Update this as necessary to dynamically retrieve the ID
-    try {
-        console.log(`Fetching availability data from URL: /tourguide/get_availability/${tourGuideId}`);
-        
-        const response = await fetch(`/tourguide/get_availability/${tourGuideId}`);
-        
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        
-        const availability = await response.json();
-        console.log("Fetched availability data:", availability);
-
-        if (!calendar) {
-            throw new Error("Calendar instance is not defined.");
-        }
-
-        // Clear current events to avoid duplication
-        calendar.getEvents().forEach(event => event.remove());
-
-        // Populate FullCalendar with fetched availability data
-        availability.forEach(entry => {
-            const color = entry.status === 'available' ? '#4ecdc4' : '#e63946';
-            const title = entry.status === 'available' ? 'Available' : 'Unavailable';
-            calendar.addEvent({
-                title: title,
-                start: entry.date,
-                allDay: true,
-                backgroundColor: color,
-                textColor: 'white',
-                extendedProps: { status: entry.status },
-            });
-        });
-    } catch (error) {
-        console.error("Error loading availability:", error);
+  // Helper: Toggle between available/unavailable
+  function toggleEventStatus(date, status) {
+    const event = calendar.getEvents().find(event => event.startStr === date);
+    if (event) {
+      if (event.extendedProps.status !== 'booked') {
+        event.remove();
+      }
+    } else {
+      const title = status === 'available' ? 'Available' : 'Unavailable';
+      const color = status === 'available' ? '#4ecdc4' : '#e63946';
+      calendar.addEvent({
+        title: title,
+        start: date,
+        allDay: true,
+        backgroundColor: color,
+        textColor: 'white',
+        extendedProps: { status: status },
+      });
     }
   }
 
-  loadAvailability(); // Call to load availability on page load
-
-  // Helper function to find if an event exists by date
-  function findEventByDate(date) {
-    return calendar.getEvents().find(event => event.startStr === date);
+  // Load availability from the server
+  async function loadAvailability() {
+    try {
+      const response = await fetch('/tourguide/get_availability');
+      if (!response.ok) throw new Error('Failed to load availability.');
+      const data = await response.json();
+      calendar.getEvents().forEach(event => event.remove());
+      data.forEach(entry => {
+        calendar.addEvent({
+          title: entry.status === 'available' ? 'Available' : 'Unavailable',
+          start: entry.date,
+          allDay: true,
+          backgroundColor: entry.status === 'available' ? '#4ecdc4' : '#e63946',
+          textColor: 'white',
+          extendedProps: { status: entry.status },
+        });
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  // Toggle edit mode and show/hide controls
+  // Save availability to the server
+  async function saveAvailability() {
+    try {
+      const events = calendar.getEvents().map(event => ({
+        date: event.startStr,
+        status: event.extendedProps.status,
+      }));
+      const response = await fetch('/tourguide/set_availability', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(events),
+      });
+      if (!response.ok) throw new Error('Failed to save availability.');
+      alert('Availability saved successfully.');
+      loadAvailability();
+    } catch (error) {
+      console.error(error);
+      alert('Failed to save availability.');
+    }
+  }
+
+  // Reset calendar and delete all availability from the database
+  async function resetAvailability() {
+    if (!confirm('Are you sure you want to reset all availability?')) return;
+    try {
+      const response = await fetch('/tourguide/reset_availability', { method: 'DELETE' });
+      if (!response.ok) throw new Error('Failed to reset availability.');
+      alert('Availability reset successfully.');
+      calendar.getEvents().forEach(event => event.remove()); // Clear events from calendar
+    } catch (error) {
+      console.error(error);
+      alert('Failed to reset availability.');
+    }
+  }
+
+  // Attach event listeners
   editAvailabilityBtn.addEventListener('click', () => {
     isEditing = !isEditing;
     toggleEditButtons(isEditing);
@@ -774,88 +1268,30 @@ document.addEventListener('DOMContentLoaded', function () {
     resetCalendarBtn.classList.toggle('hidden', !isEditing);
     saveAvailabilityBtn.classList.toggle('hidden', !isEditing);
     editAvailabilityBtn.textContent = isEditing ? 'Exit Edit Mode' : 'Edit Availability';
+    activeStatus = null; // Reset active status when exiting edit mode
   }
 
-  // Mark selected date as available
+  // Set active status to "available"
   markAvailableBtn.addEventListener('click', () => {
-    if (selectedDate) {
-      addEvent('Available', selectedDate, '#4ecdc4', 'available');
-      selectedDate = null;
-    }
+    activeStatus = 'available';
+    alert('Click on dates to mark them as available.');
   });
 
-  // Mark selected date as unavailable
+  // Set active status to "unavailable"
   markUnavailableBtn.addEventListener('click', () => {
-    if (selectedDate) {
-      addEvent('Unavailable', selectedDate, '#e63946', 'unavailable');
-      selectedDate = null;
-    }
+    activeStatus = 'unavailable';
+    alert('Click on dates to mark them as unavailable.');
   });
 
-  // Add event to the calendar with title, color, and status
-  function addEvent(title, date, color, status) {
-    if (!findEventByDate(date)) {
-      calendar.addEvent({
-        title: title,
-        start: date,
-        allDay: true,
-        backgroundColor: color,
-        textColor: 'white',
-        extendedProps: { status: status },
-      });
-    } else {
-      alert('This date already has a status.');
-    }
-  }
+  // Attach reset functionality
+  resetCalendarBtn.addEventListener('click', resetAvailability);
 
-  // Reset calendar events, excluding booked ones
-  resetCalendarBtn.addEventListener('click', () => {
-    calendar.getEvents().forEach(event => {
-      if (event.extendedProps.status !== 'booked') event.remove();
-    });
-  });
+  // Save availability
+  saveAvailabilityBtn.addEventListener('click', saveAvailability);
 
-  // Save availability data to backend
-  saveAvailabilityBtn.addEventListener('click', async () => {
-    const savedAvailability = calendar.getEvents().map(event => ({
-      title: event.title,
-      start: event.startStr,
-      status: event.extendedProps.status,
-    }));
-
-    console.log("Saving availability data:", savedAvailability);
-
-    try {
-      const response = await fetch('/tourguide/set_availability', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(savedAvailability),
-      });
-
-      if (response.ok) {
-        alert('Availability saved successfully!');
-        loadAvailability(); // Reload availability after saving to refresh the calendar
-      } else {
-        alert('Failed to save availability.');
-      }
-    } catch (error) {
-      console.error('Error saving availability:', error);
-    }
-  });
+  // Initial load
+  loadAvailability();
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1345,3 +1781,106 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+
+
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const reviewsContainer = document.getElementById('traveler-reviews');
+  const paginationControls = document.getElementById('pagination-controls');
+  const reviewsHeader = document.querySelector('.reviews-header .total-reviews');
+  const tourGuideId = reviewsContainer.dataset.tourGuideId; // Use this for the API call
+  const reviewsPerPage = 2; // Reviews per page
+  let currentPage = 1;
+
+  // Fetch paginated reviews from the server
+  const fetchReviews = async (page = 1) => {
+      const response = await fetch(`/reviews?tour_guide_id=${tourGuideId}&page=${page}&per_page=${reviewsPerPage}`);
+      return await response.json();
+  };
+
+  // Render Pagination Controls
+  const renderPagination = (currentPage, totalPages) => {
+      paginationControls.innerHTML = '';
+      if (totalPages <= 1) return;
+
+      // Previous Button
+      const prev = document.createElement('a');
+      prev.innerHTML = '&lt;';
+      prev.className = currentPage === 1 ? 'disabled' : '';
+      prev.href = '#';
+      prev.addEventListener('click', (event) => {
+          event.preventDefault();
+          if (currentPage > 1) loadReviews(currentPage - 1);
+      });
+      paginationControls.appendChild(prev);
+
+      // Page Numbers with "..." for skipped pages
+      const maxVisiblePages = 3;
+      const renderPageNumbers = () => {
+          const pages = [];
+          for (let i = 1; i <= totalPages; i++) {
+              if (
+                  i === 1 || 
+                  i === totalPages || 
+                  (i >= currentPage - 1 && i <= currentPage + 1)
+              ) {
+                  pages.push(i);
+              } else if (
+                  pages[pages.length - 1] !== '...'
+              ) {
+                  pages.push('...');
+              }
+          }
+          return pages;
+      };
+
+      renderPageNumbers().forEach((page) => {
+          if (page === '...') {
+              const dots = document.createElement('span');
+              dots.innerHTML = '...';
+              dots.className = 'pagination-ellipsis';
+              paginationControls.appendChild(dots);
+          } else {
+              const pageLink = document.createElement('a');
+              pageLink.innerHTML = page;
+              pageLink.className = currentPage === page ? 'active' : '';
+              pageLink.href = '#';
+              pageLink.addEventListener('click', (event) => {
+                  event.preventDefault();
+                  loadReviews(page);
+              });
+              paginationControls.appendChild(pageLink);
+          }
+      });
+
+      // Next Button
+      const next = document.createElement('a');
+      next.innerHTML = '&gt;';
+      next.className = currentPage === totalPages ? 'disabled' : '';
+      next.href = '#';
+      next.addEventListener('click', (event) => {
+          event.preventDefault();
+          if (currentPage < totalPages) loadReviews(currentPage + 1);
+      });
+      paginationControls.appendChild(next);
+  };
+
+  // Load Reviews and Update UI
+  const loadReviews = async (page) => {
+      const { html, total_reviews, total_pages } = await fetchReviews(page);
+
+      reviewsContainer.innerHTML = html;
+
+      // Update total reviews count and pagination
+      currentPage = page;
+      reviewsHeader.textContent = `(${total_reviews})`;
+      renderPagination(page, total_pages);
+
+      // Ensure the page doesn't scroll
+      reviewsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  // Initial Load
+  loadReviews(currentPage);
+});

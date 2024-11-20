@@ -34,7 +34,7 @@ def create_app():
     app.config['SESSION_TYPE'] = 'filesystem'
     app.config['SESSION_PROTECTION'] = 'strong'
     app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
-    app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024  # Limit file size to 2MB
+    app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # Limit file size to 2MB
     app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static/profile_pics')
 
 
@@ -58,13 +58,17 @@ def create_app():
     from BookingSystem.Admin_Page import admin
     from BookingSystem.TourOperator_Page import touroperator
     from BookingSystem.TourGuide_Page import tourguide
+    from BookingSystem.Bookings import booking
 
     app.register_blueprint(main)
     app.register_blueprint(admin, url_prefix='/admin')
     app.register_blueprint(touroperator, url_prefix='/touroperator')
     app.register_blueprint(tourguide, url_prefix='/tourguide')
+    app.register_blueprint(booking, url_prefix='/booking')
 
     with app.app_context():
         db.create_all()
 
     return app
+
+

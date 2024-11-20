@@ -56,37 +56,25 @@
             </div>
         </section>
 
-        <!-- Tour Packages Section -->
         <section id="tour-packages">
-            <h2>Available Tour <span style="color: #ff9f1c">Packages/Itineraries</span></h2> 
-                <a href="{{ url_for('main.tour_package') }}">See all</a>
+            <h2>Available Tour <span style="color: #ff9f1c">Packages/Itineraries</span></h2>
+            <a href="{{ url_for('main.tour_package') }}" class="see-more-link">See All</a>
             <div class="package-container">
-                <div class="package-card">
-                    <img src="{{ url_for('static', filename='cave.webp') }}" alt="Cave Tour">
-                    <h3>Personalized</h3>
-                    <p>Explore the enchanted cave of Bolinao.</p>
-                    <button>View Package</button>
-                </div>
-                <div class="package-card">
-                    <img src="{{ url_for('static', filename='falls.jpg') }}" alt="Falls Tour">
-                    <h3>Falls</h3>
-                    <p>Discover the stunning waterfalls of Bolinao.</p>
-                    <button>View Package</button>
-                </div>
-                <div class="package-card">
-                    <img src="{{ url_for('static', filename='city.jpg') }}" alt="City Tour">
-                    <h3>City Tour</h3>
-                    <p>Explore the vibrant city life and heritage spots.</p>
-                    <button>View Package</button>
-                </div>
-                <div class="package-card">
-                    <img src="{{ url_for('static', filename='patar.webp') }}" alt="Patar Beach Tour">
-                    <h3>Patar Beach</h3>
-                    <p>Relax on the beautiful shores of Patar Beach.</p>
-                    <button>View Package</button>
-                </div>
+                {% if packages %}
+                    {% for package in packages %}
+                    <div class="package-card">
+                        <img src="{{ url_for('static', filename=package.package_img) if package.package_img else url_for('static', filename='default.jpg') }}" alt="{{ package.name }}">
+                        <h3>{{ package.name }}</h3>
+                        <p>{{ package.description }}</p>
+                        <a href="{{ url_for('main.view_package', package_id=package.id) }}" class="view-button">View Package</a>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <p class="no-packages">No tour packages available at the moment. Check back later!</p>
+                {% endif %}
             </div>
         </section>
+        
 
         <!-- Popular Places Section -->
         <section id="popular-places">

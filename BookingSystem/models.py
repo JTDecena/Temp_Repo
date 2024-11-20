@@ -32,6 +32,7 @@ class User(db.Model, UserMixin):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     confirmed = db.Column(db.Boolean, default=False)
+    tour = db.Column(db.Integer)
 
 
     # Relationships
@@ -146,6 +147,7 @@ class TourGuide(db.Model, UserMixin):
     specialization = db.Column(db.String(255))
     contact_num = db.Column(db.String(15))
     active = db.Column(db.Boolean, default=False)
+
 
     # Relationships
     characteristics = db.relationship('Characteristic', backref='tour_guide', cascade="all, delete-orphan")
@@ -280,7 +282,7 @@ class Booking(db.Model):
     date_end = db.Column(db.Date)
     traveler_quantity = db.Column(db.Integer, nullable=False)
     special_notes = db.Column(db.Text)
-    time = db.Column(db.Time, nullable=False)
+    time = db.Column(db.Time)
     duration = db.Column(db.Interval)
     price = db.Column(db.Numeric(10, 2))
 
@@ -309,7 +311,7 @@ class ReviewImages(db.Model):
     )
     id = db.Column(db.Integer, primary_key=True)
     rr_id = db.Column(db.Integer, db.ForeignKey('Reviews_Rating.id'), nullable=False)
-    img = db.Column(db.LargeBinary)
+    img = db.Column(db.String(255))
 
 
 class Notification(db.Model):

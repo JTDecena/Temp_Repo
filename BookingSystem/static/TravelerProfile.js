@@ -193,43 +193,6 @@ closeBookingModal.addEventListener('click', () => {
 });
 
 
-// Open and Close To Review Modal
-const reviewButtons = document.querySelectorAll('.review-btn');
-const reviewModal = document.getElementById('review-modal');
-const closeReviewModal = document.getElementById('close-review-modal');
-const stars = document.querySelectorAll('.star');
-
-// Open the modal when a review button is clicked
-reviewButtons.forEach((btn) => {
-  btn.addEventListener('click', () => {
-    reviewModal.classList.add('show');
-  });
-});
-
-// Close the modal
-closeReviewModal.addEventListener('click', () => {
-  reviewModal.classList.remove('show');
-});
-
-// Star Rating Logic
-stars.forEach((star, index) => {
-  star.addEventListener('click', () => {
-    stars.forEach((s, i) => {
-      s.classList.toggle('active', i <= index); // Highlight stars up to the clicked one
-    });
-  });
-});
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -370,3 +333,286 @@ function closeModal() {
   modalOverlay.classList.remove('show');
   confirmPasswordInput.value = ''; // Clear password input
 };
+
+
+
+
+
+
+
+
+
+// document.addEventListener('DOMContentLoaded', () => {
+//   const reviewButtons = document.querySelectorAll('.review-btn');
+//   const reviewModal = document.getElementById('review-modal');
+//   const closeReviewModal = document.getElementById('close-review-modal');
+//   const stars = document.querySelectorAll('.star');
+//   let selectedRating = 0; // Store selected rating
+
+//   // Open the modal when a review button is clicked
+//   reviewButtons.forEach((btn) => {
+//     btn.addEventListener('click', () => {
+//       reviewModal.classList.add('show');
+//       document.getElementById('modal-overlay').classList.add('show');
+//     });
+//   });
+
+//   // Close the modal
+//   closeReviewModal.addEventListener('click', () => {
+//     reviewModal.classList.remove('show');
+//     document.getElementById('modal-overlay').classList.remove('show');
+//   });
+
+//   // Star Rating Logic
+//   stars.forEach((star, index) => {
+//     star.addEventListener('click', () => {
+//       selectedRating = index + 1; // Set the selected rating
+//       stars.forEach((s, i) => s.classList.toggle('active', i <= index)); // Highlight up to clicked star
+//     });
+//   });
+
+//   // Submit Review Form
+//   document.getElementById('review-form').addEventListener('submit', function (e) {
+//     e.preventDefault();
+
+//     if (selectedRating === 0) {
+//       alert('Please select a star rating.');
+//       return;
+//     }
+
+//     const comment = document.getElementById('review-text').value;
+//     const reviewImage = document.getElementById('review-image').files[0];
+//     const formData = new FormData();
+//     formData.append('rating', selectedRating);
+//     formData.append('comment', comment);
+//     if (reviewImage) formData.append('review_image', reviewImage);
+
+//     fetch('/submit_review', {
+//       method: 'POST',
+//       body: formData,
+//     })
+//       .then(response => response.json())
+//       .then(data => {
+//         if (data.success) {
+//           alert("Review submitted successfully!");
+//           reviewModal.classList.remove('show');
+//           document.getElementById('modal-overlay').classList.remove('show');
+//         } else {
+//           alert("Failed to submit review.");
+//         }
+//       })
+//       .catch(error => console.error('Error submitting review:', error));
+//   });
+// });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const reviewModal = document.getElementById('review-modal');
+  const closeReviewModal = document.getElementById('close-review-modal');
+  const stars = document.querySelectorAll('.star');
+  let selectedRating = 0; // Store selected rating
+
+  // Open the modal when a review button is clicked
+  document.querySelectorAll('.review-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+          reviewModal.classList.add('show');
+          document.getElementById('modal-overlay').classList.add('show');
+      });
+  });
+
+  // Close the modal
+  closeReviewModal.addEventListener('click', () => {
+      reviewModal.classList.remove('show');
+      document.getElementById('modal-overlay').classList.remove('show');
+  });
+
+  // Star Rating Logic
+  stars.forEach((star, index) => {
+      star.addEventListener('click', () => {
+          selectedRating = index + 1; // Set the selected rating
+          stars.forEach((s, i) => s.classList.toggle('active', i <= index)); // Highlight up to clicked star
+      });
+  });
+
+
+
+
+//   // Submit Review Form latest
+//   document.getElementById('review-form').addEventListener('submit', function (e) {
+//       e.preventDefault();
+
+//       if (selectedRating === 0) {
+//           alert('Please select a star rating.');
+//           return;
+//       }
+
+//       const comment = document.getElementById('review-text').value;
+//       const reviewImage = document.getElementById('review-image').files[0];
+//       const formData = new FormData();
+//       formData.append('rating', selectedRating);
+//       formData.append('comment', comment);
+//       formData.append('tour_guide_id', 1); // Setting tour guide ID to 1             !!!!!!!!
+//       if (reviewImage) formData.append('review_image', reviewImage);
+
+//       fetch('/submit_review', {
+//           method: 'POST',
+//           body: formData,
+//       })
+//           .then(response => response.json())
+//           .then(data => {
+//               if (data.success) {
+//                   alert("Review submitted successfully!");
+//                   reviewModal.classList.remove('show');
+//                   document.getElementById('modal-overlay').classList.remove('show');
+//                   // Optionally reload the page or add the new review to the DOM
+//               } else {
+//                   alert("Failed to submit review: " + data.message);
+//               }
+//           })
+//           .catch(error => console.error('Error submitting review:', error));
+//   });
+// });
+
+
+document.getElementById('review-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  if (selectedRating === 0) {
+      alert('Please select a star rating.');
+      return;
+  }
+
+  const comment = document.getElementById('review-text').value;
+  const reviewImage = document.getElementById('review-image').files[0];
+  const formData = new FormData();
+  formData.append('rating', selectedRating);
+  formData.append('comment', comment);
+  formData.append('tour_guide_id', 1); // Replace with the actual tour guide ID
+  if (reviewImage) {
+      formData.append('review_image', reviewImage);
+  }
+
+  fetch('/submit_review', {
+      method: 'POST',
+      body: formData,
+  })
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              alert('Review submitted successfully!');
+              location.reload(); // Reload or update the page
+          } else {
+              alert(`Failed to submit review: ${data.message}`);
+          }
+      })
+      .catch(error => console.error('Error submitting review:', error));
+});
+
+})
+
+// document.addEventListener('DOMContentLoaded', () => {
+//   const reviewModal = document.getElementById('review-modal');
+//   const closeReviewModal = document.getElementById('close-review-modal');
+//   const stars = document.querySelectorAll('.star');
+//   let selectedRating = 0; // Store selected rating
+
+//   // Open the modal when a review button is clicked
+//   document.querySelectorAll('.review-btn').forEach((btn) => {
+//     btn.addEventListener('click', () => {
+//       reviewModal.classList.add('show');
+//       document.getElementById('modal-overlay').classList.add('show');
+//     });
+//   });
+
+//   // Close the modal
+//   closeReviewModal.addEventListener('click', () => {
+//     reviewModal.classList.remove('show');
+//     document.getElementById('modal-overlay').classList.remove('show');
+//   });
+
+//   // Star Rating Logic
+//   stars.forEach((star, index) => {
+//     star.addEventListener('click', () => {
+//       selectedRating = index + 1; // Set the selected rating
+//       stars.forEach((s, i) => s.classList.toggle('active', i <= index)); // Highlight up to clicked star
+//     });
+//   });
+
+//   // Submit Review Form
+//   document.getElementById('review-form').addEventListener('submit', function (e) {
+//     e.preventDefault();
+
+//     if (selectedRating === 0) {
+//       alert('Please select a star rating.');
+//       return;
+//     }
+
+//     const comment = document.getElementById('review-text').value;
+//     const reviewImage = document.getElementById('review-image').files[0];
+//     const formData = new FormData();
+//     formData.append('rating', selectedRating);
+//     formData.append('comment', comment);
+//     formData.append('tour_guide_id', /* Add tour guide ID here if available */);
+//     if (reviewImage) formData.append('review_image', reviewImage);
+
+//     fetch('/submit_review', {
+//       method: 'POST',
+//       body: formData,
+//     })
+//       .then(response => response.json())
+//       .then(data => {
+//         if (data.success) {
+//           alert("Review submitted successfully!");
+//           reviewModal.classList.remove('show');
+//           document.getElementById('modal-overlay').classList.remove('show');
+//           // Optionally reload the page or add the new review to the DOM
+//         } else {
+//           alert("Failed to submit review: " + data.message);
+//         }
+//       })
+//       .catch(error => console.error('Error submitting review:', error));
+//   });
+// });
+
+
+
+
+
+// async function fetchBookings() {
+//   try {
+//       const response = await fetch('/my_bookings');
+//       const bookings = await response.json();
+
+//       const bookingsContainer = document.querySelector('.tours-container');
+//       bookingsContainer.innerHTML = '';
+
+//       if (bookings.length === 0) {
+//           bookingsContainer.innerHTML = '<p>No bookings available.</p>';
+//           return;
+//       }
+
+//       bookings.forEach(booking => {
+//           const card = document.createElement('div');
+//           card.classList.add('tour-card');
+//           card.dataset.status = booking.status;
+
+//           card.innerHTML = `
+//               <div class="tour-header">
+//                   <h3 class="tour-title">${booking.package_name}</h3>
+//                   <span class="tour-status ${booking.status}">${booking.status}</span>
+//               </div>
+//               <p class="tour-date">${booking.date_start} → ${booking.date_end}</p>
+//               <div class="tour-header">
+//                   <p class="tour-guide">With: <span class="guide-name">${booking.tour_guide_name}</span></p>
+//                   <span class="view-booking" onclick="openBookingDetails('${booking.id}')">View Booking &rarr;</span>
+//               </div>
+//           `;
+//           bookingsContainer.appendChild(card);
+//       });
+//   } catch (error) {
+//       console.error("Error fetching bookings:", error);
+//   }
+// }
+
+// // Load bookings on page load
+// document.addEventListener('DOMContentLoaded', fetchBookings);
